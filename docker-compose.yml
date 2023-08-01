@@ -1,0 +1,13 @@
+version: '3'
+services:
+  db:
+    image: postgres:15.3
+    container_name: compose-postgres
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_PASSWORD=password
+      - POSTGRES_DB=seccamp
+      - POSTGRES_USER=postgres
+    volumes:
+      - ./misc/sql:/docker-entrypoint-initdb.d
