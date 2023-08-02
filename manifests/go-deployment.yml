@@ -10,11 +10,11 @@ spec:
   template:
     metadata:
       labels:
-        app: go-cont
+        app: go
     spec:
       containers:
       - image: docker.io/palsha/golshi:latest
-        name: go
+        name: go-deploy
         ports:
         - containerPort: 8080
         env:
@@ -23,14 +23,5 @@ spec:
             secretKeyRef:
               name: go-sec
               key: rickey
-        volumeMounts:
-        - name: init
-          mountPath: /docker-entrypoint-initdb.d
-      volumes:
-      - name: init
-        configMap:
-          name: init
-          items:
-          - key: init.sh
-            path: init.sh
+        command: ['/golshi/main']
       
