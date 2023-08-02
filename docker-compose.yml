@@ -1,8 +1,8 @@
 version: '3'
 services:
-  db:
+  postgres:
     image: postgres:15.3
-    container_name: compose-postgres
+    container_name: postgres
     ports:
       - "5432:5432"
     environment:
@@ -11,3 +11,21 @@ services:
       - POSTGRES_USER=postgres
     volumes:
       - ./misc/sql:/docker-entrypoint-initdb.d
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  go:
+    build: .
+    environment:
+      - DATABASE_DSN=postgres://postgres:password@postgres:5432/seccamp
+    command: /golshi/main
+    container_name: compose-go
+    stdin_open: true
+    ports:
+      - "8080:8080"
+    depends_on:
+      postgres:
+        condition: service_healthy
